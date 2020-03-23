@@ -146,3 +146,47 @@ where ename between 'A%' AND 'C~';
 select * from emp
 where deptno IN (10, 30);
 --6번
+
+                     
+
+--ORDER BY 절
+SELECT * FROM emp
+--ORDER BY empno; 
+--ORDER BY ename;
+ORDER BY ename DESC;
+
+-- 부서번호 오름차순, 부서 내 이름 내림차순, 동명이인 사번 오름차순
+SELECT * FROM emp
+ORDER BY deptno ASC, ename DESC, empno;
+
+
+SELECT empno, ename, comm FROM emp
+ORDER BY comm DESC NULLS LAST;
+--ORDER BY comm ASC NULLS FIRST;
+
+SELECT empno, ename, comm, deptno FROM emp
+--WHERE comm IS NOT NULL
+ORDER BY comm DESC NULLS LAST;
+
+--조회되지 않는 컬럼을 이용해서도 정렬기준으로 삼을 수 있다.
+SELECT empno, ename, comm FROM emp
+ORDER BY sal DESC;
+
+-- DISTINCT 키워드
+SELECT DISTINCT 
+deptno 
+FROM emp
+ORDER BY deptno;
+
+SELECT Distinct empno, ename from emp;
+
+SELECT Distinct 
+deptno, ename 
+from emp
+ORDER BY deptno, ename;
+
+--직무 종류 확인하기
+SELECT DISTINCT
+JOB 
+FROM emp
+ORDER BY JOB;
