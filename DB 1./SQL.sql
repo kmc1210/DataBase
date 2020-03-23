@@ -190,3 +190,8 @@ SELECT DISTINCT
 JOB 
 FROM emp
 ORDER BY JOB;
+
+SELECT DISTINCT
+    deptno, JOB
+FROM emp
+ORDER BY deptno, JOB;                     
