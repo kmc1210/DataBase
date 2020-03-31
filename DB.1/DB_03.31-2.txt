@@ -1,0 +1,139 @@
++ 제약사항의 종류
+
+  - NOT NULL
+            
+            컬럼의 데이터로 NULL을 허용하지 않음
+            NULL 데이터 입력할 수 없음
+            
+            컬럼의 데이터타입과 연계되어 적용되는 제약사항
+            
+            ALTER TABLE tablename MODIFY ~ 구문을 이용한다
+  
+  - UNIQUE
+            컬럼에 중복데이터를 허용하지 않는다
+            데이터의 유일성을 확보한다
+            
+            ** 인덱스를 자동으로 생성한다
+  
+            UNIQUE가 설정된 컬럼은 테이블의 UNIQUE KEY라고 부른다
+            (유일키, UK)
+            
+  - CHECK
+            컬럼에 들어갈 수 있는 데이터의 범위를 지정하는 제약조건
+            
+            WHERE절의 조건문과 같은 내용을 제약조건으로 적용시킨다
+            (search_condition 으로 적용된다)
+            
+  - DEFAULT
+  
+            데이터를 입력하지 않고 INSERT할 때 입력될 기본값을 지정하는 제약사항  
+            
+            NOT NULL 처럼 칼럼의 추가 정보로 등록된다
+            
+            제약사항 항목으로 부여되지 않는다
+            
+            -> user_constraints 로 확인할 수 없다 ( 제약조건정보 자료사전)
+            -> user_tab_columns 로 확인해야한다 (테이블 컬럼정보 자료사전)
+            
+            
+  - PRIMARY KEY
+  
+            기본키, 주키
+            
+            테이블을 대표하는 컬럼으로 지정하는 키
+            
+            NOT NULL, UNIQUE 제약사항의 특성이 자동으로 부여됨
+            
+            NOT NULL, UNIQUE 가 별도의 항목으로 제약사항이 생성되지는 않는다
+            
+            PRIMARY KEY 자체가 NOT NULL이며 UNIQUE 이다
+            UNIQUE 속성을 가지고 있어서 인덱스가 자동으로 생성된다
+            
+            외래키(FK)들이 참조할 수 있는 자격이 부여된다
+            
+            + 기본키 지정 방법
+            
+              - 방법 1 : 컬럼에 제약조건 이름을 명시하며 지정하기
+                
+                CREATE TABLE CONS_09 (
+                  no NUMBER CONSTRAINT cons_09_pk PRIMARY KEY,
+                  data VARCHAR2(20) NOT NULL );
+                
+              - 방법 2 : 컬럼에 제약조건 이름없이 지정하기 
+             
+                CREATE TABLE cons_10(
+                  no NUMBER PRIMARY KEY,
+                  data VARCHAR2(20) NOT NULL );    
+              
+              - 방법 3 : 컬럼 설정 이후에 CONSTRAINT 키워드로 지정하기
+                   
+                CREATE TABLE cons_11(
+                  no NUMBER, 
+                  data VARCHAR2(20) NOT NULL,
+                  CONSTRAINT cons_11_pk PRIMARY KEY (no ));
+                    
+              - 방법 4 : 테이블 생성 이후 ALTER TABLE로 지정하기
+                
+                CREATE TABLE cons_12(
+                  no NUMBER,
+                  data VARCHAR2(20) NOT NULL );    
+        
+                  ALTER TABLE cons_12
+                  ADD CONSTRAINT cons_12_pk PRIMARY KEY (no);
+              
+  - FOREIGN KEY
+        외래키, 보조키, 참조키
+        
+        기본키(PK)를 참조하는 컬럼 또는 컬럼들
+        
+        참조하고 있는 컬럼(기본키)과 데이터타입이 일치해야한다
+         
+        ** 참조무결성 원칙을 지켜야한다
+              외래키는 기본키로 존재하는 값을 가져야한다
+              
+              -> 외래키가 참조하고 있는 기본키는 삭제할 수 없다
+              -> 외래키들을 전부 지우고 기본키를 삭제할 수 있다
+              
+              -> 외래키의 값을 null로 바궈도 된다
+              
+        ** 외래키 지정 구문 마지막에 넣을 수 있는 옵션
+              
+              ON DELETE SET NULL 옵션
+              -> PK 가 삭제되면 자동으로 NULL로 변경됨
+              
+              ON DELETE CASCADE 옵션
+              -> PK 가 삭제되며 자동으로 같이 삭제됨
+              
+       + 외래키 지정 방식
+       
+            - 방법 1 : 컬럼 설정 이후에 CONSTRAINT 로 지정하기
+            CREATE TABLE cons_14(
+               num NUMBER,
+               data VARCHAR2 (50),
+            CONSTRAINT cons_14_fk
+            FOREIGN KEY ( num ) -- 자기 테이블의 FK
+            REFERENCES cons_12 ( no) ); -- 참조 테이블의 PK
+            
+            
+            - 방법 2 : 테이블 생성 후에 ALTER TABLE로 지정하기
+            
+            CREATE TABLE cons_15(
+              num NUMBER,
+              data VARCHAR2 (50));
+        
+        
+            ALTER TABLE cons_15
+            ADD CONSTRAINT cons_15_fk
+            FOREIGN KEY ( num ) -- 자기 테이블의 FK
+            REFERENCES cons_12 ( no); -- 참조 테이블의 PK
+            
+  + PK, FK 의 관계            
+      
+      - 식별관계 , Identifying Relationship
+          FK가 해당테이블에서 PK 역할을 수행하는 것
+          
+          
+      - 비식별관계 , Non - Identifying Relationship
+          FK가 해당테이블에서 PK 역할을 수행하지 않는 것
+ 
+   
