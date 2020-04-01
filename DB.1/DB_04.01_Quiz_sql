@@ -1,0 +1,144 @@
+CREATE TABLE userTb(
+    userno NUMBER NOT NULL,
+    userid VARCHAR2(50) NOT NULL,
+    userpw VARCHAR2(100) NOT NULL,
+    gender VARCHAR2(1),
+    email VARCHAR2(100),
+    phone VARCHAR2(11),
+    grade NUMBER NOT NULL,
+    report NUMBER NOT NULL,
+    CONSTRAINT userTB_pk
+    PRIMARY KEY(userno));
+
+--    -- 테이블 확인
+--    SELECT * FROM user_tab_columns
+--    WHERE table_name = upper('userTb');
+--    -- 제약조건 찾기
+--    SELECT * FROM user_constraints
+--    WHERE table_name = upper('userTb');
+--    user_constraints 로 확인할 수 없다 ( 제약조건정보 자료사전)
+    
+--DROP TABLE report;
+    
+
+    
+    
+--    SELECT * FROM user_tab_columns
+--    WHERE table_name = upper('grade');
+
+    
+CREATE TABLE grade(
+    grade NUMBER,
+    gradename VARCHAR2(100),
+    CONSTRAINT grade_pk
+    PRIMARY KEY(grade));
+    
+-- userTb fk 설정
+    ALTER TABLE userTb
+    ADD CONSTRAINT userTb_fk1
+    FOREIGN KEY ( grade )
+    REFERENCES grade ( grade );
+    
+ CREATE TABLE report (
+    report NUMBER  ,
+    report_dat DATE NOT NULL,
+    report_reason VARCHAR2(500) NOT NULL,
+    CONSTRAINT report_pk
+    PRIMARY KEY ( report )
+ ) ;
+ 
+--    --테이블 확인 --
+--    SELECT * FROM user_tab_columns
+--    WHERE table_name = upper('report');
+    
+    -- userTb에서 report로 FK 추가 
+    ALTER TABLE userTb
+    ADD CONSTRAINT userTb_fk_2
+        FOREIGN KEY ( report )
+        REFERENCES report (report);
+   
+   
+       --- 게시판 종류   
+        
+    CREATE TABLE board_cate(
+    cateno NUMBER,
+    cate_name VARCHAR2(100),
+    cate_date DATE,
+    CONSTRAINT board_cate_pk
+        PRIMARY KEY (cateno));
+        
+        
+    -- 게시판
+    CREATE TABLE board(
+    boardno NUMBER,
+    cateno NUMBER NOT NULL,
+    title VARCHAR2(200) NOT NULL,
+    content VARCHAR2(2000) NOT NULL,
+    insert_dat DATE NOT NULL,
+    update_dat DATE NOT NULL,
+    hit NUMBER NOT NULL,
+    has_file VARCHAR2(1) NOT NULL,
+    userno NUMBER NOT NULL,
+    CONSTRAINT board_pk
+        PRIMARY KEY (boardno));
+        
+--        SELECT * FROM user_tab_columns
+--    WHERE table_name = upper('board');
+    
+        ALTER TABLE board
+    ADD CONSTRAINT board_fk1
+        FOREIGN KEY ( cateno )
+        REFERENCES board_cate ( cateno );
+
+            ALTER TABLE board
+    ADD CONSTRAINT board_fk2
+        FOREIGN KEY ( userno )
+        REFERENCES userTb ( userno );
+   
+    -- 첨부파일
+    
+    CREATE TABLE filetb(
+    fileno NUMBER NOT NULL,
+    boardno NUMBER NOT NULL,
+    filename VARCHAR2(500) NOT NULL,
+    filepath VARCHAR2(500) NOT NULL,
+    filesize NUMBER,
+    filetype VARCHAR2(20),
+    CONSTRAINT filetb_pk
+        PRIMARY KEY (fileno));
+    
+    ALTER TABLE filetb
+    ADD CONSTRAINT filetb_fk
+        FOREIGN KEY ( boardno)
+        REFERENCES board (boardno);
+       
+     -- 댓글 테이블
+     
+     CREATE TABLE commenttb(
+     commentno NUMBER NOT NULL,
+     boardno NUMBER NOT NULL,
+     userno NUMBER NOT NULL,
+     content VARCHAR2(500),
+     insert_dat DATE NOT NULL,
+     CONSTRAINT commenttb_pk
+        PRIMARY KEY (commentno));
+     
+     -- boardno fk 설정
+     ALTER TABLE commenttb
+     ADD CONSTRAINT commenttb_fk1
+        FOREIGN KEY (boardno)
+        REFERENCES board (boardno);
+        
+          -- userno fk 설정
+     ALTER TABLE commenttb
+     ADD CONSTRAINT commenttb_fk2
+        FOREIGN KEY (userno)
+        REFERENCES userTb (userno);
+
+DROP TABLE commenttb;
+DROP TABLE filetb;
+DROP TABLE board;
+DROP TABLE userTb;
+DROP TABLE board_cate;
+DROP TABLE grade;
+DROP TABLE report;
